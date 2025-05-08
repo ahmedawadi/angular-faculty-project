@@ -1,0 +1,31 @@
+<div
+  class="bg-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+>
+  <div class="p-8 text-white" [ngClass]="getGradientClass()">
+    <div class="p-8">
+      <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ field.title }}</h3>
+      <p class="text-gray-600 mb-6">
+        {{ field.description }}
+      </p>
+      <button
+        (click)="onViewProjects()"
+        class="w-full text-white py-3 px-4 rounded-md transition duration-300 flex items-center justify-center gap-2"
+        [ngClass]="getButtonClass()"
+      >
+        View Projects
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

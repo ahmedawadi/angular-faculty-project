@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Department } from '../../types';
 import { ReactiveFormsModule } from '@angular/forms'; // <-- Import this
 import { HttpClient } from '@angular/common/http';
-import castObjectToFormData from '../../utils/from-json-to-form-data';
 
 @Component({
   selector: 'app-contact',
@@ -44,11 +43,9 @@ export class ContactComponent {
     if (this.contactForm.valid) {
       // In a real application, you would send the form data to a server here
 
-      const formData = castObjectToFormData(this.contactForm.value);
-
       // Simulate API call
       this.http
-        .post('http://localhost:8085/contacts/register', formData)
+        .post('http://localhost:8085/contacts/register', this.contactForm.value)
         .subscribe({
           next: () => {
             this.formSuccess = true;

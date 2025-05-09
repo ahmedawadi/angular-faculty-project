@@ -5,7 +5,9 @@ import { FieldType } from '../../types/fields';
 import { ProjectSubmission } from '../../types/projects';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FieldService } from '../../services/fields.service';
+import { FieldsService } from '../../services/fields.service';
+import castObjectToFormData from '../../utils/from-json-to-form-data';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-submit-project',
@@ -32,7 +34,8 @@ export class SubmitProjectComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    fieldsService: FieldService
+    private http: HttpClient,
+    fieldsService: FieldsService
   ) {
     fieldsService.getFields().subscribe({
       next: (fields) => {
@@ -249,11 +252,11 @@ export class SubmitProjectComponent implements OnInit {
       const submission: ProjectSubmission = {
         title: formValue.title,
         description: formValue.description,
-        field: formValue.field,
+        fieldId: formValue.field,
         type: formValue.type,
         year: formValue.year,
         students: formValue.students.map((s: any) => s.name),
-        supervisors: formValue.supervisors.map((s: any) => s.name),
+        supervisor: formValue.supervisors.map((s: any) => s.name)[0],
         technologies: formValue.technologies.map((t: any) => t.name),
         images: formValue.images,
         imagePreviewUrls: formValue.imagePreviewUrls,
@@ -261,20 +264,31 @@ export class SubmitProjectComponent implements OnInit {
         demoUrl: formValue.demoUrl,
       };
 
+      // In a real application, you would send the form data to a server here
+
+      const formData = castObjectToFormData(submission);
+
       // Simulate API call
-      setTimeout(() => {
-        // In a real application, you would send the data to your backend here
-        console.log('Project submission:', submission);
+      this.http
+        .post('http://localhost:8085/projects/register', formData)
+        .subscribe({
+          next: () => {
+            this.projectForm.reset();
+            this.submitError = false;
+            this.submitSuccess = true;
 
-        // Simulate successful submission
-        this.isSubmitting = false;
-        this.submitSuccess = true;
-
-        // Redirect after a delay
-        setTimeout(() => {
-          this.router.navigate(['/projects']);
-        }, 3000);
-      }, 1500);
+            console.log('successufl ');
+            setTimeout(() => {
+              this.submitSuccess = false;
+            }, 5000);
+          },
+          error: (error) => {
+            console.error('Error submitting form:', error);
+            this.submitError = true;
+            this.errorMessage =
+              'Sorry a technical error occured Please try to submit your project again';
+          },
+        });
     } else {
       this.markFormGroupTouched(this.projectForm);
       this.submitError = true;

@@ -1,18 +1,18 @@
+import { environment } from '../../environments/environment';
 import { ProjectType, ProjectInResponseType } from '../../types/projects';
-import { castToFieldType } from './field.dto';
 
 export function castToProject(project: ProjectInResponseType): ProjectType {
   return {
     id: project.id,
     title: project.title,
     description: project.description,
-    field: castToFieldType(project.field),
+    field: { id: project.fieldId, title: '', description: '' },
     type: project.type,
     year: project.year,
     students: [...project.students],
-    supervisors: [...project.supervisors],
+    supervisors: [project.supervisor],
     technologies: [...project.technologies],
-    images: [...project.images],
+    images: project.images.map((image) => `${environment.apiUrl}${image}`),
     githubUrl: project.githubUrl,
     demoUrl: project.demoUrl,
   };

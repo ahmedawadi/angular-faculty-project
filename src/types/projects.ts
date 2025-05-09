@@ -1,4 +1,4 @@
-import { FieldInResponseType, FieldType } from './fields';
+import { FieldType } from './fields';
 
 export interface ProjectType {
   id: string;
@@ -19,11 +19,11 @@ export interface ProjectInResponseType {
   id: string;
   title: string;
   description: string;
-  field: FieldInResponseType;
+  fieldId: string;
   type: 'PFA' | 'Course' | 'Summary Internship';
   year: number;
   students: string[];
-  supervisors: string[];
+  supervisor: string;
   technologies: string[];
   images: string[];
   githubUrl?: string;
@@ -33,11 +33,11 @@ export interface ProjectInResponseType {
 export interface ProjectSubmission {
   title: string;
   description: string;
-  field: string;
+  fieldId: string;
   type: 'PFA' | 'Course' | 'Summary Internship';
   year: number;
   students: string[];
-  supervisors: string[];
+  supervisor: string;
   technologies: string[];
   images: File[];
   imagePreviewUrls: string[];

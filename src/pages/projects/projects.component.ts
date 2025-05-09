@@ -3,9 +3,9 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Required for ngModel
 import { ProjectType } from '../../types/projects';
-import { ProjectService } from '../../services/projects.service';
-import { FieldService } from '../../services/fields.service';
+import { ProjectsService } from '../../services/projects.service';
 import { FieldType } from '../../types/fields';
+import { FieldsService } from '../../services/fields.service';
 
 @Component({
   selector: 'app-projects',
@@ -30,8 +30,8 @@ export class ProjectsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private projectService: ProjectService,
-    private fieldService: FieldService
+    private projectService: ProjectsService,
+    private fieldService: FieldsService
   ) {
     this.projectService.getProjects().subscribe({
       next: (projects) => {

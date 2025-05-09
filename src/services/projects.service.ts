@@ -1,17 +1,29 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs'; // Import 'of' and 'map'
-import { map } from 'rxjs/operators'; // Import 'map'
-import { ProjectType } from '../types/projects';
-import { mockProjects } from '../mock-data/projects';
+import { map, tap } from 'rxjs/operators'; // Import 'map'
+import { ProjectInResponseType, ProjectType } from '../types/projects';
 import { castToProject } from '../utils/dto/project.dto';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectService {
+export class ProjectsService {
+  projects: ProjectType[] = [];
+
+  constructor(private http: HttpClient) {}
+
   // In a real application, this would fetch from an API
   getProjects(): Observable<ProjectType[]> {
-    return of(mockProjects.map((project) => castToProject(project))); // Returning the mockProjects
+    if (this.projects.length !== 0) return of(this.projects);
+
+    return this.http
+      .get<ProjectInResponseType[]>(`${environment.apiUrl}/projects`)
+      .pipe(
+        map((projects) => projects.map((p) => castToProject(p))),
+        tap((projects) => (this.projects = projects))
+      );
   }
 
   getProjectById(id: string): Observable<ProjectType | undefined> {

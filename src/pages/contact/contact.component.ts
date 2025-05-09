@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Department } from '../../types';
 import { ReactiveFormsModule } from '@angular/forms'; // <-- Import this
+import { HttpClient } from '@angular/common/http';
+import castObjectToFormData from '../../utils/from-json-to-form-data';
 
 @Component({
   selector: 'app-contact',
@@ -20,7 +22,7 @@ export class ContactComponent {
 
   activeTab = 'general';
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private http: HttpClient) {
     this.contactForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
@@ -41,21 +43,28 @@ export class ContactComponent {
 
     if (this.contactForm.valid) {
       // In a real application, you would send the form data to a server here
-      console.log('Form submitted:', this.contactForm.value);
+
+      const formData = castObjectToFormData(this.contactForm.value);
 
       // Simulate API call
-      setTimeout(() => {
-        // Simulate successful submission
-        this.formSuccess = true;
-        this.formError = false;
-        this.contactForm.reset();
-        this.formSubmitted = false;
-
-        // Reset success message after 5 seconds
-        setTimeout(() => {
-          this.formSuccess = false;
-        }, 5000);
-      }, 1500);
+      this.http
+        .post('http://localhost:8085/contacts/register', formData)
+        .subscribe({
+          next: () => {
+            this.formSuccess = true;
+            this.formError = false;
+            this.contactForm.reset();
+            this.formSubmitted = false;
+            console.log('successufl ');
+            setTimeout(() => {
+              this.formSuccess = false;
+            }, 5000);
+          },
+          error: (error) => {
+            console.error('Error submitting form:', error);
+            this.formError = true;
+          },
+        });
     } else {
       this.formError = true;
     }

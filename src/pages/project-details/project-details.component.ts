@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProjectType } from '../../types/projects';
-import { ProjectService } from '../../services/projects.service';
+import { ProjectService } from '../../services/project.service';
 
 @Component({
   selector: 'app-project-details',
@@ -25,7 +25,7 @@ export class ProjectDetailComponent implements OnInit {
     this.route.params.subscribe((params) => {
       const id = params['id']; // Convert to number
 
-      this.projectService.getProjectById(id).subscribe(
+      this.projectService.getProject(id).subscribe(
         (project) => {
           this.project = project;
           this.loading = false;

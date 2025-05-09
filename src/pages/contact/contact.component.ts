@@ -45,7 +45,10 @@ export class ContactComponent {
 
       // Simulate API call
       this.http
-        .post('http://localhost:8085/contacts/register', this.contactForm.value)
+        .post(
+          'http://10.25.14.138:8085/contacts/register',
+          this.contactForm.value
+        )
         .subscribe({
           next: () => {
             this.formSuccess = true;

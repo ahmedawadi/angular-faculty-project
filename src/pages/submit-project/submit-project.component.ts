@@ -270,7 +270,7 @@ export class SubmitProjectComponent implements OnInit {
 
       // Simulate API call
       this.http
-        .post('http://localhost:8085/projects/register', formData)
+        .post('http://10.25.14.138:8085/projects/register', formData)
         .subscribe({
           next: () => {
             this.projectForm.reset();
